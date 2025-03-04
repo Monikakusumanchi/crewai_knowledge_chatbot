@@ -5,7 +5,9 @@ description = "crewai_knowledge_chatbot using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
-    "crewai[tools]>=0.95.0,<1.0.0"
+    "crewai[tools]>=0.95.0,<1.0.0",
+    "gtts>=2.5.4",
+    "pyttsx3>=2.98",
 ]
 
 [project.scripts]

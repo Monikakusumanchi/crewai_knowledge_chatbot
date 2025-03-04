@@ -7,7 +7,7 @@ job_desc_source = PDFKnowledgeSource(file_paths=["Job_description.pdf"])
 
 memory_config = {
     "provider": "mem0",
-    "config": {"user_id": "User"},
+    "config": {"user_id": "User","output_format":"v1.1"},
 }
 
 

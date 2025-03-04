@@ -10,6 +10,7 @@ memory_config = {
     "config": {"user_id": "User"},
 }
 
+
 @CrewBase
 class CrewaiKnowledgeChatbot:
     """CrewaiKnowledgeChatbot crew"""

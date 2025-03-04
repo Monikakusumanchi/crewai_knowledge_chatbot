@@ -9,11 +9,12 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 client = MemoryClient()
 
+
 def run():
     history = []
 
     while True:
-        user_input = input("Your Responseser: ")
+        user_input = input("User: ")
         if user_input.lower() in ["exit", "quit", "bye"]:
             print("Chatbot: Goodbye! It was nice talking to you.")
             break
@@ -27,8 +28,8 @@ def run():
 
         response = CrewaiKnowledgeChatbot().crew().kickoff(inputs=inputs)
 
-        history.append(f"Your Response: {user_input}")
-        history.append(f"Interviewer: {response}")
-        client.add(user_input, user_id="Your Response")
+        history.append(f"User: {user_input}")
+        history.append(f"Assistant: {response}")
+        client.add(user_input, user_id="User")
 
-        print(f"Interviewer: {response}")
+        print(f"Assistant: {response}")

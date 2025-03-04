@@ -1,0 +1,12 @@
+uv
+crewai
+crewai-tools
+gradio
+sounddevice
+openai-whisper 
+torch
+pyaudio
+sudo apt-get update && sudo apt-get install portaudio19-dev
+pyttsx3 gtts
+sudo apt-get install alsa-utils
+sudo apt update && sudo apt install espeak

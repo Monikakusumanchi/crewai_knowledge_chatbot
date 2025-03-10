@@ -2,8 +2,8 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.knowledge.source.pdf_knowledge_source import PDFKnowledgeSource
 
-resume_source = PDFKnowledgeSource(file_paths=["Resume.pdf"])
-job_desc_source = PDFKnowledgeSource(file_paths=["Job_description.pdf"])
+# resume_source = PDFKnowledgeSource(file_paths=["Resume.pdf"])
+# job_desc_source = PDFKnowledgeSource(file_paths=["Job_description.pdf"])
 
 memory_config = {
     "provider": "mem0",
@@ -39,6 +39,6 @@ class CrewaiKnowledgeChatbot:
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            knowledge_sources=[resume_source, job_desc_source],
+            # knowledge_sources=[resume_source, job_desc_source],
             verbose=False,
         )

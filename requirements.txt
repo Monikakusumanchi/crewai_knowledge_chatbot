@@ -8,6 +8,9 @@ torch
 pyaudio
 pyttsx3 
 gtts
+langchain_groq 
+groq
+litellm
 # sudo apt-get install alsa-utils
 # sudo apt update && sudo apt install espeak
 # sudo apt-get update && sudo apt-get install portaudio19-dev

@@ -24,7 +24,7 @@ def chatbot_response(user_input, first_name, last_name, college, branch, passing
     global history
     
     if user_input.lower() in ["exit", "quit", "bye"]:
-        return "Chatbot: Goodbye! It was nice talking to you."
+        return "Goodbye! It was nice talking to you."
     
     chat_history = "\n".join(history)
     inputs = {
@@ -39,7 +39,7 @@ def chatbot_response(user_input, first_name, last_name, college, branch, passing
     }
     
     response = CrewaiKnowledgeChatbot().crew().kickoff(inputs=inputs)
-    
+ 
     history.append(f"User: {user_input}")
     history.append(f"Assistant: {response}")
     client.add(user_input, user_id="User")

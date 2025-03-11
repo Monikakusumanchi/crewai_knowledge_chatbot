@@ -16,5 +16,49 @@ chat_task:
       Use the conversation history to build your response to the user:\n\n{history}\n\nRespond to the user's message: {user_message}
     expected_output: >
       Your output should be a relevant, accurate, and engaging response that directly addresses the user's query or continues the conversation logically.
-    agent: >
-      assistant
+    agent: interviewer_agent
+
+# problem_solving_task:
+#     description: >
+#       "Assess the candidate's logical thinking and problem-solving abilities."
+#     expected_output: >
+#       "Candidate provides a correct or well-reasoned answer to a logical problem."
+#     agent: interviewer_agent
+      
+
+# coding_task:
+#     description: >
+#       "Ask the candidate to write a simple Python function to test coding fundamentals."
+#     expected_output: >
+#       "Candidate writes an efficient and correct Python function."
+#     agent: interviewer_agent
+      
+
+# sdlc_task:
+#     description: >
+#       "Evaluate the candidate’s understanding of SDLC and its application to data-intensive projects."
+#     expected_output: >
+#       "Candidate provides a clear and structured explanation of SDLC."
+#     agent: interviewer_agent
+
+# general_knowledge_task:
+#     description: >
+#       "Ask a general knowledge question related to technology and the industry."
+#     expected_output: >
+#       "Candidate provides a relevant and accurate response."
+#     agent: interviewer_agent
+
+# essential_skills_task:
+#     description: >
+#       "Assess the candidate’s soft skills, including communication, teamwork, and adaptability."
+#     expected_output: >
+#       "Candidate demonstrates industry readiness and strong communication skills."
+#     agent: interviewer_agent
+
+evaluation_task:
+    description: >
+      "Analyze the candidate’s responses and generate a performance summary."
+    expected_output: >
+      "Structured JSON data containing details according to history user:\n\n{history}\n\nRespond to the user's message: {user_message} using the 
+      the SkillAssessment,EvaluationOutput model schema."
+    agent: evaluator_agent

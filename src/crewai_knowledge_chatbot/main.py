@@ -1,7 +1,9 @@
+import os
+import requests
+import json
 import warnings
 import pyttsx3  # Offline TTS
 from gtts import gTTS  # Online TTS
-import os
 import gradio as gr
 from crewai_knowledge_chatbot.crew import CrewaiKnowledgeChatbot
 from mem0 import MemoryClient
@@ -10,21 +12,55 @@ import time
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 client = MemoryClient()
-engine = pyttsx3.init()  # Initialize offline TTS engine
-history = []  # Store chat history
+engine = pyttsx3.init()
+history = []
 
 def text_to_speech(text):
-    """Converts chatbot response to speech using gTTS."""
     tts = gTTS(text=text, lang='en')
     tts.save("output.mp3")
     return "output.mp3"
 
-def chatbot_response(user_input, first_name, last_name, college, branch, passing_year, skills):
-    """Handles user messages and generates chatbot responses."""
-    global history
+def lipsync_video(audio_file):
+    files = [
+        ("input_face", open("/workspace/crewai_knowledge_chatbot/sample.mp4", "rb")),
+        ("input_audio", open(audio_file, "rb")),
+    ]
+    payload = {
+        "selected_model": "Wav2Lip",
+        "face_padding_top": 18,
+        "face_padding_bottom": 18,
+        "face_padding_left": 18,
+        "face_padding_right": 18,
+    }
     
-    if user_input.lower() in ["exit", "quit", "bye"]:
-        return "Goodbye! It was nice talking to you."
+    response = requests.post(
+        "https://api.gooey.ai/v3/Lipsync/async/form/",
+        headers={"Authorization": "bearer " + os.environ["GOOEY_API_KEY"]},
+        files=files,
+        data={"json": json.dumps(payload)},
+    )
+    
+    assert response.ok, response.content
+    status_url = response.headers["Location"]
+    
+    while True:
+        response = requests.get(status_url, headers={"Authorization": "bearer " + os.environ["GOOEY_API_KEY"]})
+        assert response.ok, response.content
+        result = response.json()
+        print("API Response:", result)
+       
+        if result["status"] == "completed":
+            if "output" in result and "output_video" in result["output"]:
+                return result["output"]["output_video"]
+            else:
+                print("Error: 'output_video' not found in API response")
+                return None  
+        elif result["status"] == "failed":
+            return None
+        time.sleep(3)
+
+def chatbot_response(user_input, first_name, last_name, college, branch, passing_year, skills):
+    global history
     
     chat_history = "\n".join(history)
     inputs = {
@@ -39,7 +75,6 @@ def chatbot_response(user_input, first_name, last_name, college, branch, passing
     }
     
     response = CrewaiKnowledgeChatbot().crew().kickoff(inputs=inputs)
- 
     history.append(f"User: {user_input}")
     history.append(f"Assistant: {response}")
     client.add(user_input, user_id="User")
@@ -47,17 +82,17 @@ def chatbot_response(user_input, first_name, last_name, college, branch, passing
     return response
 
 def chat_interface(user_input, first_name, last_name, college, branch, passing_year, skills):
-    """Generates text and speech output for the chatbot response."""
     response = chatbot_response(user_input, first_name, last_name, college, branch, passing_year, skills)
     audio_file = text_to_speech(str(response))
-    return response, audio_file, gr.update(visible=True), gr.update(visible=False)
+    lipsync_url = lipsync_video(audio_file)
+    return response, lipsync_url, gr.update(visible=True)
 
 def start_interview(first_name, last_name, college, branch, passing_year, skills):
-    """Enables the chat interface and starts the conversation."""
     greeting = f"Hello {first_name}, welcome to your mock interview. Please introduce yourself."
     history.append(f"Assistant: {greeting}")
     audio_file = text_to_speech(greeting)
-    return gr.update(visible=True), gr.update(visible=False), greeting, audio_file
+    lipsync_url = lipsync_video(audio_file)
+    return gr.update(visible=True), gr.update(visible=False), greeting, lipsync_url
 
 demo = gr.Blocks(theme='NoCrypt/miku')
 with demo:
@@ -78,16 +113,16 @@ with demo:
     chat_interface_section = gr.Column(visible=False)
     with chat_interface_section:
         chatbot_output = gr.Textbox(label="Interviewer", interactive=False)
-        audio_output = gr.Audio(label="Speech Output", autoplay=True, visible=False)
+        lipsync_output = gr.Video(label="Lip-Synced Interviewer", visible=True)
         user_input = gr.Textbox(label="Your Response", placeholder="Type your message here...")
         send_btn = gr.Button("Send")
     
     start_btn.click(start_interview, 
                     inputs=[first_name, last_name, college, branch, passing_year, skills], 
-                    outputs=[chat_interface_section, personal_info_section, chatbot_output, audio_output])
+                    outputs=[chat_interface_section, personal_info_section, chatbot_output, lipsync_output])
     
     send_btn.click(chat_interface, 
                    inputs=[user_input, first_name, last_name, college, branch, passing_year, skills], 
-                   outputs=[chatbot_output, audio_output])
+                   outputs=[chatbot_output, lipsync_output])
 
 demo.launch()

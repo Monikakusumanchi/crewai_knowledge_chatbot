@@ -11,6 +11,8 @@ gtts
 langchain_groq 
 groq
 litellm
-# sudo apt-get install alsa-utils
-# sudo apt update && sudo apt install espeak
-# sudo apt-get update && sudo apt-get install portaudio19-dev
+pyttsx3
+# sudo apt-get install alsa-utils -y
+# sudo apt update && sudo apt install espeak -y
+# sudo apt-get update && sudo apt-get install portaudio19-dev -y
+# sudo apt-get update && sudo apt-get install espeak -y

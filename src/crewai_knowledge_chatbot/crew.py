@@ -23,7 +23,6 @@ memory_config = {
     "config": {"user_id": "User","output_format":"v1.1"},
 }
 
-
 @CrewBase
 class CrewaiKnowledgeChatbot:
     """CrewaiKnowledgeChatbot crew"""
@@ -31,7 +30,7 @@ class CrewaiKnowledgeChatbot:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
-    llm = ChatGroq(model="groq/llama-3.3-70b-versatile", groq_api_key=groq_api_key)
+    llm = ChatGroq(model="groq/llama3-70b-8192", groq_api_key=groq_api_key)
 
     # def __init__(self):
         # print(f"Available agents: {self.agents_config.items()}")  # Debugging step

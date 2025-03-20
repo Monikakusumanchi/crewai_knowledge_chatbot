@@ -59,18 +59,16 @@ def lipsync_video(audio_file):
             return None
         time.sleep(3)
 
-def chatbot_response(user_input, first_name, last_name, college, branch, passing_year, skills):
+def chatbot_response(user_input, name, college, branch, skills):
     global history
     
     chat_history = "\n".join(history)
     inputs = {
         "user_message": user_input,
         "history": chat_history,
-        "first_name": first_name,
-        "last_name": last_name,
+        "name": name,
         "college": college,
         "branch": branch,
-        "passing_year": passing_year,
         "skills": skills
     }
     
@@ -81,14 +79,14 @@ def chatbot_response(user_input, first_name, last_name, college, branch, passing
     
     return response
 
-def chat_interface(user_input, first_name, last_name, college, branch, passing_year, skills):
-    response = chatbot_response(user_input, first_name, last_name, college, branch, passing_year, skills)
+def chat_interface(user_input, name, college, branch, skills):
+    response = chatbot_response(user_input, name, college, branch, skills)
     audio_file = text_to_speech(str(response))
     lipsync_url = lipsync_video(audio_file)
     return response, lipsync_url, gr.update(visible=True)
 
-def start_interview(first_name, last_name, college, branch, passing_year, skills):
-    greeting = f"Hello {first_name}, welcome to your mock interview. Please introduce yourself."
+def start_interview(name, college, branch, skills):
+    greeting = f"Hello {name}, welcome to your mock interview. Please introduce yourself."
     history.append(f"Assistant: {greeting}")
     audio_file = text_to_speech(greeting)
     lipsync_url = lipsync_video(audio_file)
@@ -102,11 +100,9 @@ with demo:
         personal_info_section = gr.Column(visible=True)
         with personal_info_section:
             gr.Markdown("## Personal Information")
-            first_name = gr.Textbox(label="First Name", placeholder="Enter your first name")
-            last_name = gr.Textbox(label="Last Name", placeholder="Enter your last name")
+            name = gr.Textbox(label="First Name", placeholder="Enter your first name")
             college = gr.Textbox(label="College Name", placeholder="Enter your college name")
             branch = gr.Textbox(label="Branch", placeholder="Enter your branch")
-            passing_year = gr.Textbox(label="Year of Passing", placeholder="Enter your passing year")
             skills = gr.Textbox(label="Skills", placeholder="Enter your skills (comma-separated)")
             start_btn = gr.Button("Start Interview")
     
@@ -118,11 +114,11 @@ with demo:
         send_btn = gr.Button("Send")
     
     start_btn.click(start_interview, 
-                    inputs=[first_name, last_name, college, branch, passing_year, skills], 
+                    inputs=[name, college, branch, skills], 
                     outputs=[chat_interface_section, personal_info_section, chatbot_output, lipsync_output])
     
     send_btn.click(chat_interface, 
-                   inputs=[user_input, first_name, last_name, college, branch, passing_year, skills], 
+                   inputs=[user_input, name, college, branch, skills], 
                    outputs=[chatbot_output, lipsync_output])
 
 demo.launch()

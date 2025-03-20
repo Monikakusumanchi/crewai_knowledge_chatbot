@@ -25,6 +25,8 @@ class CrewaiKnowledgeChatbot:
             memory=True,
             memory_config=memory_config,
             verbose=False,
+            llm=self.llm
+
         )
 
     @task
